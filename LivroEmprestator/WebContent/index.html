@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-sanitize.js"></script>
+</head>
+<body>
+	<input type="text" ng-model="nome">
+	<p>Olá, Tableless! Meu nome é: {{ nome }}</p>
+
+	<div ng-controller="personCtrl">
+
+		First Name: <input type="text" ng-model="firstName"><br>
+		Last Name: <input type="text" ng-model="lastName"><br> <br>
+		Full Name: {{fullName()}}
+
+	</div>
+	<ul class="tabs-nav">
+		<li><a ng-click="tab=1" ng-init="tab=1"
+			ng-class="{'active' : tab==1}">Aba 1</a></li>
+		<li><a ng-click="tab=2" ng-class="{'active' : tab==2}">Aba 2</a></li>
+		<li><a ng-click="tab=3" ng-class="{'active' : tab==3}">Aba 2</a></li>
+	</ul>
+
+	<div class="tabs-container">
+		<div class="tab-content" ng-show="tab == 1">
+			<h3>Primeira aba</h3>
+			<p>Lorem ipsum...</p>
+		</div>
+
+		<div class="tab-content" ng-show="tab == 2">
+			<h3>Segunda aba</h3>
+			<p>Lorem ...</p>
+		</div>
+
+		<div class="tab-content" ng-show="tab == 3">
+			<h3>Terceira aba</h3>
+			<p>Lorem ...</p>
+		</div>
+	</div>
+
+
+	<div ng-controller="ListaComprasController">
+		<table>
+			<thead>
+				<tr>
+					<th>Produto</th>
+					<th>Quantidade</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in itens">
+					<td><strong>{{ item.produto }}</strong></td>
+					<td>{{ item.quantidade }}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>	
+	
+	
+
+	<p data-ng-controller='GithubController'>
+		<img class='user-avatar' data-ng-src="{{User.avatar_url}}" alt="">
+		<br /> <span class='user-label'>Login:</span> {{User.login}} <br />
+		<span class='user-label'>Name:</span> {{User.name}} <br /> <span
+			class='user-label'>Company:</span> {{User.company}} <br /> <span
+			class='user-label'>Blog:</span> {{User.blog}} <br /> <span
+			class='user-label'>Email:</span> {{User.email}} <br /> <span
+			class='user-label'>Location:</span> {{User.location}}
+	</p>
+
+	<div ng-controller="myCtrl">
+
+    <p ng-bind-html="myWelcome"></p>
+
+</div>
+
+	<script>
+		var app = angular.module('myApp', ['ngSanitize']);		
+		
+		
+
+		app.controller('personCtrl', function($scope) {
+			$scope.firstName = "John";
+			$scope.lastName = "Doe";
+			$scope.fullName = function() {
+				return $scope.firstName + " " + $scope.lastName;
+			};
+		});
+		app.controller('ListaComprasController', function($scope) {
+			$scope.itens = [ {
+				produto : 'Leite',
+				quantidade : 2,
+				comprado : false
+			}, {
+				produto : 'Cerveja',
+				quantidade : 12,
+				comprado : false
+			} ];
+		});
+
+		app.controller('myCtrl', function($scope, $http) {
+			$http({
+				method : "GET",
+				url : "welcome.htm"
+			}).then(function mySuccess(response) {
+				$scope.myWelcome = response.data;
+			}, function myError(response) {
+				$scope.myWelcome = response.statusText;
+			});
+		});
+		
+		
+
+		app.controller('GithubController', function($scope, $http) {
+		    $http({
+		        method : "GET",
+		        url : "https://api.github.com/users/suissa"
+		    }).then(function mySuccess(response) {
+		    	$scope.User = response.data;
+		    }, function myError(response) {
+		    	console.log('Erro: ', response);
+		    });
+		});
+		
+	</script>
+</body>
+</html>
